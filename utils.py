@@ -64,15 +64,21 @@ def	read_fild(file):
 def	read_tasks(fileName):
 	list_task = []
 	task = {}
-	content = ''
 
-	f = open(fileName, 'r')
-	while True:
-		content = read_fild(f)
-		if not content :
-			break
-		else:
-			task = json.loads(content);
-			list_task.append(task)
-	f.close();
+	try:
+		with open(fileName, "r") as f:
+			for line in f:
+				line = line.strip()
+				if line:
+					try:
+						task = json.loads(line)
+						list_task.append(task)
+					except json.JSONDecodeError:
+						print("Erro de JSON na linha:", line)
+						continue
+	
+	except FileNotFoundError:
+		print("File " + fileName + " is missing")
+		return None
+	
 	return (list_task)

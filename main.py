@@ -26,16 +26,18 @@ def	add_task(list_task, id=0):
 	list_task.append(task)
 	js = json.dumps(task)
 	with open(fileName, 'a') as f:
-		f.write(js)
-
-def	show_tasks(list_task=0):
+		f.write(js + '\n')
+		
+def show_tasks(list_task):
 	list_task = read_tasks(fileName)
+	if list_task is None:
+		return
 	if not list_task:
 		print("List is empty")
-		return 
+		return
 	for task in list_task:
 		show_fild(task)
-
+		
 def	markCompleted(list_task):
 	js = ''
 	id = get_task_id(len(list_task))
@@ -47,7 +49,7 @@ def	markCompleted(list_task):
 	for task in list_task:
 		js += json.dumps(task)
 	with open(fileName, 'w') as f:
-		f.write(js)
+		f.write(js + '\n')
 
 
 
@@ -88,3 +90,5 @@ def	main():
 		else:
 			print("Inavlid commnad⁉❌")
 main()
+
+#read_tasks(fileName)
