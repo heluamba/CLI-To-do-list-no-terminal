@@ -22,7 +22,7 @@ def	valid_input(prompt):
 
 def	set_status():
 	status = ['PENDING', 'DOING', 'COMPLETED']
-	nu = 0;
+	nu = 0
 	
 	print("Select task status")
 	print("1-PENDING | 2-DOING | 3-COMPLETED: ")
@@ -39,6 +39,27 @@ def	show_fild(fild):
 	print("STATUS: " + fild['status'])
 	print("STACK ID: " + str(fild['id']))
 	print("--------------------------------------")
+
+
+def	sort_listTask(list_task):
+	if len(list_task) <= 1:
+		return list_task
+	
+	pivo = list_task[0]
+	smalers = [task for task in list_task[1:] if task.get("id") <= pivo.get("id")]
+	biggers = [task for task in list_task[1:] if task.get("id") > pivo.get("id")]
+
+	return ( sort_listTask(smalers) + [pivo] + sort_listTask(biggers) )
+
+
+
+def	genere_id(list_task):
+	id = 1
+	for task in list_task:
+		if task.get("id") <= id:
+			id += 1
+	return (id)
+
 
 
 def	get_task_id(size):

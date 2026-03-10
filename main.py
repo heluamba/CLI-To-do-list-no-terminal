@@ -1,5 +1,6 @@
 import json
 import	sys
+import pdb
 from utils import * 
 
 fileName = 'tasks.json'
@@ -15,19 +16,25 @@ def	show_menu(list_task=[]):
 	print("5. exit\n")
 	print("========================================")
 
-def	add_task(list_task, id=0):
+def	add_task(list_task):
 	task = {}
 	js = ''
-	add_task.id = getattr(add_task, "id", 0) + 1
-
-	task['id'] = add_task.id
+	list_task = read_tasks(fileName)
+	list_task = sort_listTask(list_task)
+	if list_task is None:
+		return
+	if not list_task:
+		task['id'] = 1
+	else:
+		task['id'] = genere_id(list_task)
 	task['taskName'] = valid_input("Put the task Name")
 	task['status'] = set_status()
 	list_task.append(task)
 	js = json.dumps(task)
 	with open(fileName, 'a') as f:
 		f.write(js + '\n')
-		
+
+
 def show_tasks(list_task):
 	list_task = read_tasks(fileName)
 	if list_task is None:
@@ -35,9 +42,11 @@ def show_tasks(list_task):
 	if not list_task:
 		print("List is empty")
 		return
+	list_task = sort_listTask(list_task)
 	for task in list_task:
 		show_fild(task)
-		
+
+
 def	markCompleted(list_task):
 	js = ''
 	id = get_task_id(len(list_task))
@@ -90,5 +99,6 @@ def	main():
 		else:
 			print("Inavlid commnad⁉❌")
 main()
+
 
 #read_tasks(fileName)
