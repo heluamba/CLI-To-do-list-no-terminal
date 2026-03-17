@@ -1,4 +1,4 @@
-{"id": 2, "taskName": "kip", "status": "DOING"}
-{"id": 1, "taskName": "fast", "status": "PENDING"}
-{"id": 3, "taskName": "cart", "status": "PENDING"}
-{"id": 4, "taskName": "boom", "status": "DOING"}
+{"id": 3, "taskName": "cart", "status": "COMPLETAED"}
+{"id": 1, "taskName": "fast", "status": "COMPLETAED"}
+{"id": 4, "taskName": "cum", "status": "DOING"}
+{"id": 2, "taskName": "tom", "status": "PENDING"}

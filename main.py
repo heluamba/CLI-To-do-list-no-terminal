@@ -47,32 +47,42 @@ def show_tasks(list_task):
 		show_fild(task)
 
 
+def	save_on_file(list_task):
+	top_line = True
+	for task in list_task:
+		js = json.dumps(task)
+		if top_line:
+			with open(fileName, 'w') as f:
+				top_line = False
+				f.write(js + '\n')
+		else:
+			with open(fileName, 'a') as f:
+				f.write(js + '\n')
+
 def	markCompleted(list_task):
+	list_task = read_tasks(fileName)
 	js = ''
 	id = get_task_id(len(list_task))
 	if id == False:
 		print("Inavalid id❌")
 		return 
-	list_task = read_tasks()
-	list_task[id - 1]['status'] = "COMPLETAED"
-	for task in list_task:
-		js += json.dumps(task)
-	with open(fileName, 'w') as f:
-		f.write(js + '\n')
-
+	for i, task in enumerate(list_task):
+		if id == task['id']:
+			list_task[i]['status'] = "COMPLETAED"
+	save_on_file(list_task)
 
 
 def	delete_task(list_task):
+	list_task  = read_tasks(fileName)
 	js = '' 
 	id = get_task_id(len(list_task))
 	if id == False:
 		print("Inavalid id❌")
-		return 
-	list_task = read_tasks(fileName)
-	for task in list_task:
-		js += json.dumps(task)
-	with open(fileName, 'w') as f:
-		f.write(js)
+		return
+	for i, task in enumerate(list_task):
+		if id == task['id']:
+			del list_task[i]
+	save_on_file(list_task)
 
 def	exit(list_task):
 	del list_task

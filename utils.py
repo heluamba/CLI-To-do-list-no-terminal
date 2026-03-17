@@ -64,7 +64,7 @@ def	genere_id(list_task):
 
 def	get_task_id(size):
 	id = input("Put the id task: ")
-	if not is_number(id) or (int(id) < 0 or int(id) > size):
+	if not is_number(id) or (int(id) < 0):
 		return (False)
 	return (int(id))
 
