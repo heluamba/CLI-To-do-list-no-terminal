@@ -1,5 +1,6 @@
 import json
 
+
 def	is_number(val):
 	try:
 		int(val)
@@ -7,18 +8,14 @@ def	is_number(val):
 	except ValueError:
 		return (False)
 
-def	valid_input(prompt):
-	flag = True
-	data = ''
 
-	while True:
-		if flag:
-			flag = False
-			data = input(prompt + "\n")
-		if is_number(data):
-			data = input("Invalid input, try again:\n")
-		else:
-			return (data)
+def valid_input(prompt):
+    while True:
+        data = input(prompt + "\n").strip()
+        if data:
+            return data
+        print("Campo não pode estar vazio.")
+
 
 def	set_status():
 	status = ['PENDING', 'DOING', 'COMPLETED']
@@ -33,7 +30,8 @@ def	set_status():
 		else:
 			return(status[int(nu) - 1])
 
-def	show_fild(fild):
+
+def	show_field(fild):
 	print("--------------------------------------")
 	print("STASK: " + fild['taskName'])
 	print("STATUS: " + fild['status'])
@@ -41,65 +39,22 @@ def	show_fild(fild):
 	print("--------------------------------------")
 
 
-def	sort_listTask(list_task):
-	if len(list_task) <= 1:
-		return list_task
-	
-	pivo = list_task[0]
-	smalers = [task for task in list_task[1:] if task.get("id") <= pivo.get("id")]
-	biggers = [task for task in list_task[1:] if task.get("id") > pivo.get("id")]
-
-	return ( sort_listTask(smalers) + [pivo] + sort_listTask(biggers) )
+def generate_id(tasks):
+    if not tasks:
+        return 1
+    return max(task["id"] for task in tasks) + 1
 
 
-
-def	genere_id(list_task):
-	id = 1
-	for task in list_task:
-		if task.get("id") <= id:
-			id += 1
-	return (id)
-
-
-
-def	get_task_id(size):
+def	get_task_id():
 	id = input("Put the id task: ")
-	if not is_number(id) or (int(id) < 0):
+	if not is_number(id) or (int(id) <= 0):
 		return (False)
 	return (int(id))
 
 
-#Read json
-
-def	read_fild(file):
-	fild = ''
-
-	for line in file:
-		if '}' in line:
-			fild += line
-			break
-		else:
-			fild += line
-	return (fild)
-
-def	read_tasks(fileName):
-	list_task = []
-	task = {}
-
-	try:
-		with open(fileName, "r") as f:
-			for line in f:
-				line = line.strip()
-				if line:
-					try:
-						task = json.loads(line)
-						list_task.append(task)
-					except json.JSONDecodeError:
-						print("Erro de JSON na linha:", line)
-						continue
-	
-	except FileNotFoundError:
-		print("File " + fileName + " is missing")
-		return None
-	
-	return (list_task)
+def read_tasks(fileName):
+    try:
+        with open(fileName, "r") as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []

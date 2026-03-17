@@ -5,110 +5,99 @@ from utils import *
 
 fileName = 'tasks.json'
 
+
 def	show_menu(list_task=[]):
 	print("========================================")
 	print("           TASK MANAGER                 ")
 	print("========================================")
-	print("1. list")
-	print("2. add")
-	print("3. complete")
-	print("4. delete")
-	print("5. exit\n")
+	print(". list")
+	print(". add")
+	print(". complete")
+	print(". delete")
+	print(". exit\n")
 	print("========================================")
 
-def	add_task(list_task):
+def save_tasks(tasks):
+    with open(fileName, "w") as f:
+        json.dump(tasks, f, indent=2)
+
+
+def	add_task(list_task): 
 	task = {}
-	js = ''
-	list_task = read_tasks(fileName)
-	list_task = sort_listTask(list_task)
-	if list_task is None:
-		return
+	if list_task:
+		list_task.sort(key=lambda x: x["id"])
 	if not list_task:
 		task['id'] = 1
 	else:
-		task['id'] = genere_id(list_task)
+		task['id'] = generate_id(list_task)
 	task['taskName'] = valid_input("Put the task Name")
 	task['status'] = set_status()
 	list_task.append(task)
-	js = json.dumps(task)
-	with open(fileName, 'a') as f:
-		f.write(js + '\n')
+	save_tasks(list_task)
 
 
 def show_tasks(list_task):
-	list_task = read_tasks(fileName)
-	if list_task is None:
-		return
 	if not list_task:
 		print("List is empty")
 		return
-	list_task = sort_listTask(list_task)
+	list_task.sort(key=lambda x: x["id"])
 	for task in list_task:
-		show_fild(task)
+		show_field(task)
 
-
-def	save_on_file(list_task):
-	top_line = True
-	for task in list_task:
-		js = json.dumps(task)
-		if top_line:
-			with open(fileName, 'w') as f:
-				top_line = False
-				f.write(js + '\n')
-		else:
-			with open(fileName, 'a') as f:
-				f.write(js + '\n')
 
 def	markCompleted(list_task):
-	list_task = read_tasks(fileName)
-	js = ''
-	id = get_task_id(len(list_task))
+	if not list_task:
+		return 
+	found = False
+	id = get_task_id()
 	if id == False:
 		print("Inavalid id❌")
 		return 
 	for i, task in enumerate(list_task):
 		if id == task['id']:
-			list_task[i]['status'] = "COMPLETAED"
-	save_on_file(list_task)
+			list_task[i]['status'] = "COMPLETED"
+			found = True
+			break
+	if not found:
+		print("Task not found ❌")
+		return
+	save_tasks(list_task)
 
 
 def	delete_task(list_task):
-	list_task  = read_tasks(fileName)
-	js = '' 
-	id = get_task_id(len(list_task))
+	if list_task == None:
+		return 
+	id = get_task_id()
 	if id == False:
 		print("Inavalid id❌")
 		return
 	for i, task in enumerate(list_task):
 		if id == task['id']:
 			del list_task[i]
-	save_on_file(list_task)
+			break
+	save_tasks(list_task)
 
-def	exit(list_task):
-	del list_task
+def	exit_program(_):
 	sys.exit(0)
 
 def	main():
 	cmd = ""
-	list_task = []
+	list_task = read_tasks(fileName)
 	commands = {
 		'list'     : show_tasks,
 		'menu'	   : show_menu,
 		'add'      : add_task,
 		'complete' : markCompleted,
 		'delete'   : delete_task,
-		'exit'     : exit
+		'exit'     : exit_program
 		}
 
 	show_menu()
 	while True:
 		cmd = input("> ")
-		cmd = commands.get(cmd)
-		if  callable(cmd):
-			cmd(list_task)
+		action = commands.get(cmd)
+		if  callable(action):
+			action(list_task)
 		else:
 			print("Inavlid commnad⁉❌")
 main()
-
-
-#read_tasks(fileName)
